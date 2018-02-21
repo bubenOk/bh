@@ -1,70 +1,33 @@
 package com.voitov.bh.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.voitov.bh.textures.TextureManager;
-import com.voitov.bh.textures.TextureType;
-import com.voitov.bh.world.GameWorld;
+import com.voitov.bh.BHGame;
+import com.voitov.bh.screens.controller.SpaceController;
+import com.voitov.bh.screens.model.SpaceModel;
+import com.voitov.bh.stages.SpaceStage;
+import com.voitov.bh.stages.SpaceUiStage;
 
-/** Экран звёздной системы. Здесь игрок может
- *  лететь вокруг звезды и приземляться на планеты. */
-
-public class SpaceScreen extends AbstractScreen {
+public class SpaceScreen extends AbstractScreen<SpaceModel, SpaceController> implements SpaceController {
 	
-	private Stage stage;
-
-    public SpaceScreen(ScreenManager stageManager, TextureManager textureManager,	GameWorld gameWorld) {
-    	super(stageManager, textureManager, gameWorld);
-    	
-    	stage = new Stage();
-        Table table = new Table();
-        table.setFillParent(true);
-        table.center();
-        Image image = new Image(textureManager.getTexture(TextureType.BADLOGIC));
-        table.add(image);
-        stage.addActor(table);
+	private SpaceModel model = new SpaceModel(gameWorld.getGalaxies().first());
+	
+    public SpaceScreen(final BHGame game) {
+    	super(game);
     }
-
+    
 	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
+	public void init() {
+		resetStage(new SpaceStage(game, model, this));
+    	resetStage(new SpaceUiStage(game, model, this));
+	}
+	
+	@Override
+	public SpaceModel getModel(){
+		return model;
 	}
 
 	@Override
-	public void render(float delta) {
-		stage.act();
-		stage.draw();		
+	public SpaceController getController() {
+		return this;
 	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dispose() {
-		stage.dispose();		
-	}
-
+	
 }

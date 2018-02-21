@@ -1,16 +1,19 @@
-package com.voitov.bh.world.galaxy;
+package com.voitov.bh.world.staticc.galaxy;
 
 public class Planet{
 	
-	public enum PlanetType{GREEN, RED, GRAY}
+	public enum PlanetType{green, red, blue}
 	
 	private PlanetType type;
 	
 	private float startPosition;// between 0 and 2PI
 	
-	public Planet(PlanetType type, float startPosition) {
+	private String name;
+	
+	public Planet(PlanetType type, float startPosition, String name) {
 		this.type = type;
 		this.startPosition = startPosition;
+		this.name = name;
 	}
 
 	public PlanetType getType() {
@@ -19,6 +22,10 @@ public class Planet{
 
 	public float getStartPosition() {
 		return startPosition;
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 }

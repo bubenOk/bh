@@ -9,12 +9,13 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.voitov.bh.actors.LoadingBar;
-import com.voitov.bh.screens.ScreenManager.StageType;
-import com.voitov.bh.textures.TextureManager;
-import com.voitov.bh.world.GameWorld;
+import com.voitov.bh.BHGame;
+import com.voitov.bh.actors.ui.LoadingBar;
+import com.voitov.bh.screens.ScreenManager.ScreenType;
+import com.voitov.bh.screens.controller.EmptyController;
+import com.voitov.bh.screens.model.EmptyModel;
 
-public class LoadingScreen extends AbstractScreen {
+public class LoadingScreen extends AbstractScreen<EmptyModel, EmptyController> {
 
     private Stage stage;
 
@@ -28,20 +29,21 @@ public class LoadingScreen extends AbstractScreen {
     private float percent;
     
     private float time = 0.0000000001f;
+    private boolean loaded = false;
 
     private Actor loadingBar;
 
-    public LoadingScreen(ScreenManager screenManager, TextureManager textureManager, GameWorld gameWorld) {
-        super(screenManager, textureManager, gameWorld);
+    public LoadingScreen(BHGame game) {
+        super(game);
     }
 
     @Override
     public void show() {
     	textureManager.load("data/loading.atlas", TextureAtlas.class);
     	textureManager.finishLoading();
-
-        TextureAtlas atlas = textureManager.get("data/loading.atlas", TextureAtlas.class);
-
+    	
+    	TextureAtlas atlas = textureManager.get("data/loading.atlas", TextureAtlas.class); 
+    	
         logo = new Image(atlas.findRegion("libgdx-logo"));
         loadingFrame = new Image(atlas.findRegion("loading-frame"));
         loadingBarHidden = new Image(atlas.findRegion("loading-bar-hidden"));
@@ -63,14 +65,14 @@ public class LoadingScreen extends AbstractScreen {
         stage.addActor(loadingFrame);
         stage.addActor(logo);
         
-        textureManager.load("data/other.atlas", TextureAtlas.class);
+        textureManager.load("data/main.atlas", TextureAtlas.class);
     }
 
     @Override
     public void resize(int width, int height) {
         // Set our screen to always be xxx x 480 in size
-        width = 480 * width / height;
-        height = 480;
+        width = screenManager.width;
+        height = screenManager.height;
         //stage.setViewport(width , height, false);
 
         // Make the background fill the screen
@@ -107,13 +109,14 @@ public class LoadingScreen extends AbstractScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (textureManager.update()) { // Load some, will return true if done loading
-        	 if(time != 0){
+        	 if(time != 0 && !loaded){
         		 Gdx.app.log("loading time", String.valueOf(time));
-        		 time = 0;
+        		 loaded = true;
              }
         	
-            if (Gdx.input.isTouched()) { // If the screen is touched after the game is done loading, go to the main menu screen
-                screenManager.toStage(StageType.SPACE);
+            if (Gdx.input.isTouched() || time >= 1.5) { // If the screen is touched after the game is done loading, go to the main menu screen
+//            	screenManager.preInitScreens(game);
+            	screenManager.toScreen(ScreenType.SPACE);
             }
         }
         
@@ -137,19 +140,25 @@ public class LoadingScreen extends AbstractScreen {
     }
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void dispose() {
 		stage.dispose();
+	}
+
+	@Override
+	EmptyModel getModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	EmptyController getController() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	void init() {
+		// TODO Auto-generated method stub
+		
 	}
 }

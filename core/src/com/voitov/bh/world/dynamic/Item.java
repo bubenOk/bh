@@ -1,4 +1,4 @@
-package com.voitov.bh.world.user;
+package com.voitov.bh.world.dynamic;
 
 
 public class Item {

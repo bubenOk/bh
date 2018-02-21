@@ -1,4 +1,4 @@
-package com.voitov.bh.world.user;
+package com.voitov.bh.world.dynamic;
 
 import com.badlogic.gdx.utils.OrderedSet;
 
